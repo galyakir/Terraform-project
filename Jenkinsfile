@@ -6,8 +6,11 @@ try {
     node {
       cleanWs()
       checkout scm
+      withAWS(credentials:'awsCredentials') {
+                s3Download(file: 'terraform.tfvars.json', bucket: 'jenkins-terraform-variables', path: '/var/lib/jenkins/workspace/pipline_feature')
     }
   }
+
 
   // Run terraform init
   stage('init') {
@@ -19,7 +22,6 @@ try {
         secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
       ]]) {
         ansiColor('xterm') {
-           sh 'echo $PWD'
           sh 'terraform init'
         }
       }
@@ -35,7 +37,6 @@ try {
           secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
         ]]) {
           ansiColor('xterm') {
-             sh 'echo $PWD'
             sh 'terraform plan'
           }
         }
