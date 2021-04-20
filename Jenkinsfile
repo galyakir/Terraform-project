@@ -6,9 +6,13 @@ try {
     node {
       cleanWs()
       checkout scm
-      withAWS(credentials:'awsCredentials') {
-                s3Download(file: 'terraform.tfvars.json', bucket: 'jenkins-terraform-variables', path: '/var/lib/jenkins/workspace/pipline_feature')
-    }
+      withCredentials([[
+              $class: 'AmazonWebServicesCredentialsBinding',
+              credentialsId: credentialsId,
+              accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+              secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+            ]])  {
+      s3Download bucket: 'jenkins-terraform-variables', file: 'terraform.tfvars.json', path: '/var/lib/jenkins/workspace/pipline_feature'    }
   }
 
 
