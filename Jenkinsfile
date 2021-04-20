@@ -19,11 +19,28 @@ try {
         secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
       ]]) {
         ansiColor('xterm') {
+           sh 'echo $PWD'
           sh 'terraform init'
         }
       }
     }
   }
+
+  stage('plan') {
+      node {
+        withCredentials([[
+          $class: 'AmazonWebServicesCredentialsBinding',
+          credentialsId: credentialsId,
+          accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+          secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+        ]]) {
+          ansiColor('xterm') {
+             sh 'echo $PWD'
+            sh 'terraform plan'
+          }
+        }
+      }
+    }
 
   if (env.BRANCH_NAME == 'master') {
 
