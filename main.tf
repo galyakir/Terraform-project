@@ -65,4 +65,3 @@ resource "aws_db_instance" "app_DB" {
 
 
 
-

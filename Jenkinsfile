@@ -6,14 +6,17 @@ try {
     node {
       cleanWs()
       checkout scm
-      withCredentials([[
-              $class: 'AmazonWebServicesCredentialsBinding',
-              credentialsId: credentialsId,
-              accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-              secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
-            ]])  {
-      s3Download bucket: 'jenkins-terraform-variables', file: 'terraform.tfvars.json', path: '/var/lib/jenkins/workspace/pipline_feature'    }
   }
+  // Download terraform.tfvars.json from S3
+   stage('S3download')
+            {
+                node {
+                    withAWS(region:'us-east-1',credentials:'awsCredentials')\
+                    {
+                        s3Download bucket: 'web-app-bucket-gal', file: 'terraform.tfvars.json', path: 'terraform.tfvars.json'
+                    }
+                }
+            }
 
 
   // Run terraform init
