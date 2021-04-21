@@ -6,18 +6,8 @@ try {
     node {
       cleanWs()
       checkout scm
+    }
   }
-  // Download terraform.tfvars.json from S3
-   stage('S3download')
-            {
-                node {
-                    withAWS(region:'us-east-1',credentials:'awsCredentials')\
-                    {
-                        s3Download bucket: 'web-app-bucket-gal', file: 'terraform.tfvars.json', path: 'terraform.tfvars.json'
-                    }
-                }
-            }
-
 
   // Run terraform init
   stage('init') {
@@ -29,11 +19,22 @@ try {
         secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
       ]]) {
         ansiColor('xterm') {
+           sh 'echo $PWD'
           sh 'terraform init'
         }
       }
     }
   }
+
+  stage('S3download')
+          {
+              node {
+                  withAWS(region:'us-east-1',credentials:'awsCredentials')\
+                  {
+                      s3Download bucket: 'web-app-bucket-gal', file: 'terraform.tfvars.json', path: 'terraform.tfvars.json'
+                  }
+              }
+          }
 
   stage('plan') {
       node {
@@ -44,6 +45,7 @@ try {
           secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
         ]]) {
           ansiColor('xterm') {
+             sh 'echo $PWD'
             sh 'terraform plan'
           }
         }
@@ -67,7 +69,24 @@ try {
         }
       }
     }
+     stage('destroy') {
+          node {
+            withCredentials([[
+              $class: 'AmazonWebServicesCredentialsBinding',
+              credentialsId: credentialsId,
+              accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+              secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+            ]]) {
+              ansiColor('xterm') {
+                    sh 'sleep 60'
+                    sh 'terraform destroy -auto-approve'
+              }
+            }
+          }
+        }
   }
+
+
 
   currentBuild.result = 'SUCCESS'
 }
