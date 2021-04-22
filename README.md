@@ -16,4 +16,3 @@ Output of dns of the app, ec2 user name and password.
 **update.sh:**
 
 Simple bash script to deploy WeightTracker app automatically
-* note that you need to update app url at developer.OKTA.
