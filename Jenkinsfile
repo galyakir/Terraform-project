@@ -1,104 +1,63 @@
-// Jenkinsfile
-String credentialsId = 'awsCredentials'
 
-try {
+// Jenkinsfile
+pipeline{
+agent {label 'aws'}
+
+stages{
   stage('checkout') {
-    node {
+    steps{
+    script {
       cleanWs()
       checkout scm
+     }
     }
   }
 
-  // Run terraform init
-  stage('init') {
-    node {
-      withCredentials([[
-        $class: 'AmazonWebServicesCredentialsBinding',
-        credentialsId: credentialsId,
-        accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-        secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
-      ]]) {
-        ansiColor('xterm') {
-           sh 'echo $PWD'
-          sh 'terraform init'
-        }
-      }
-    }
-  }
-
-  stage('S3download')
-          {
-              node {
+    stage('S3download'){
+              steps {
+                   script {
                   withAWS(region:'us-east-1',credentials:'awsCredentials')\
                   {
-                      s3Download bucket: 'web-app-bucket-gal', file: 'terraform.tfvars.json', path: 'terraform.tfvars.json'
+                    s3Download bucket: 'web-app-bucket-gal', file: 'terraform.tfvars.json', path: 'terraform.tfvars.json'
                   }
               }
           }
-
-  stage('plan') {
-      node {
-        withCredentials([[
-          $class: 'AmazonWebServicesCredentialsBinding',
-          credentialsId: credentialsId,
-          accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-          secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
-        ]]) {
-          ansiColor('xterm') {
-             sh 'echo $PWD'
-            sh 'terraform plan'
           }
-        }
-      }
-    }
 
-  if (env.BRANCH_NAME == 'master') {
-
-    // Run terraform apply
-    stage('apply and deploy') {
-      node {
-        withCredentials([[
-          $class: 'AmazonWebServicesCredentialsBinding',
-          credentialsId: credentialsId,
-          accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-          secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
-        ]]) {
-          ansiColor('xterm') {
-            sh 'terraform apply -auto-approve'
-          }
-        }
-      }
-    }
-     stage('destroy') {
-          node {
-            withCredentials([[
-              $class: 'AmazonWebServicesCredentialsBinding',
-              credentialsId: credentialsId,
-              accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-              secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
-            ]]) {
-              ansiColor('xterm') {
-                    sh 'sleep 60'
-                    sh 'terraform destroy -auto-approve'
+      stage('plan'){
+              steps {
+                   script {
+                  withAWS(region:'us-east-1',credentials:'awsCredentials')\
+                  {
+                       sh 'terraform plan'
+                  }
               }
-            }
           }
-        }
-  }
+          }
+
+          stage('apply and deploy')
+          {
+              steps {
+               script {
+                  withAWS(region:'us-east-1',credentials:'awsCredentials')\
+                    {
+                     sh 'terraform apply -auto-approve'
+                    }
+              }
+          }
+          }
+}
+}
+}
 
 
 
-  currentBuild.result = 'SUCCESS'
-}
-catch (org.jenkinsci.plugins.workflow.steps.FlowInterruptedException flowError) {
-  currentBuild.result = 'ABORTED'
-}
-catch (err) {
-  currentBuild.result = 'FAILURE'
-  throw err
-}
-finally {
-  if (currentBuild.result == 'SUCCESS') {
-    currentBuild.result = 'SUCCESS'
-  }
-}
+
+
+
+
+
+
+
+
+

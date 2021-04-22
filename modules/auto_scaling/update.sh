@@ -14,8 +14,6 @@ yes "$password" | sudo passwd ubuntu
 sudo systemctl restart sshd
 
 #change .env file to deploy the app
-#cd /home/ubuntu/node-weight-tracker || exit
-
 mkdir /home/ubuntu/node-weight-tracker
 cd /home/ubuntu/node-weight-tracker || exit
 aws s3 cp --recursive s3://web-app-bucket-gal/app .
