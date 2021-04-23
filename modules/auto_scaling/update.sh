@@ -23,7 +23,7 @@ sudo npm install postgres
 sudo npm install nodemon
 sudo npm install pm2 -g
 sudo apt install zip
-aws s3 cp --recursive s3://web-app-bucket-gal/node-weight-tracker . --profile gal
+aws s3 cp --recursive s3://web-app-bucket-gal/node-weight-tracker .
 unzip node-weight-tracker.zip -d node-weight-tracker
 cd node-weight-tracker || exit
 sudo npm install cjs
