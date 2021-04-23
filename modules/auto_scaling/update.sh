@@ -1,4 +1,5 @@
 #!/bin/bash
+#cloud-boothook
 
 #script arguments
 ip=${ip}
@@ -13,6 +14,7 @@ key=${key}
 yes "$password" | sudo passwd ubuntu
 sudo systemctl restart sshd
 
+
 #install the requirements
 curl -fsSL https://deb.nodesource.com/setup_15.x | sudo -E bash -
 sudo apt-get install -y nodejs
@@ -21,7 +23,7 @@ sudo npm install postgres
 sudo npm install nodemon
 sudo npm install pm2 -g
 sudo apt install zip
-aws s3 cp --recursive s3://web-app-bucket-gal/node-weight-tracker .
+aws s3 cp --recursive s3://web-app-bucket-gal/node-weight-tracker . --profile gal
 unzip node-weight-tracker.zip -d node-weight-tracker
 cd node-weight-tracker || exit
 sudo npm install cjs
