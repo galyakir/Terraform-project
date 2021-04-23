@@ -13,11 +13,22 @@ key=${key}
 yes "$password" | sudo passwd ubuntu
 sudo systemctl restart sshd
 
-#change .env file to deploy the app
-mkdir /home/ubuntu/node-weight-tracker
-cd /home/ubuntu/node-weight-tracker || exit
-aws s3 cp --recursive s3://web-app-bucket-gal/app .
+#install the requirements
+curl -fsSL https://deb.nodesource.com/setup_15.x | sudo -E bash -
+sudo apt-get install -y nodejs
+sudo npm install dotenv
+sudo npm install postgres
+sudo npm install nodemon
+sudo npm install pm2 -g
+sudo apt install zip
+aws s3 cp --recursive s3://web-app-bucket-gal/node-weight-tracker .
+unzip node-weight-tracker.zip -d node-weight-tracker
+cd node-weight-tracker || exit
+sudo npm install cjs
 
+
+
+#create .env file to deploy the app
 echo "# Host configuration
 PORT=8080
 HOST=0.0.0.0
@@ -34,9 +45,14 @@ PGUSERNAME=postgres
 PGDATABASE=postgres
 PGPASSWORD=postgres
 PGPORT=5432" >.env
-npm run initdb
 
-#rest api request to update l ogin url at okta
+
+#deploy the app
+sudo pm2 start npm -- run dev
+sudo pm2 save
+sudo pm2 startup
+
+#rest api request to update login url at okta
 curl --request PUT 'https://${url}/api/v1/apps/${id}' \
 --header 'Accept: application/json' \
 --header 'Content-Type: application/json' \
