@@ -20,10 +20,18 @@ stages{
                                     }
         }
        }
+
 // this stage init terraform
  stage ('init'){
    steps{
 				  sh 'terraform init'
+        }
+       }
+
+// this stage destroy auto_scaling module so the user_date will update
+stage ('destroy'){
+   steps{
+         sh 'terraform destroy -target module.auto_scaling -auto-approve'
         }
        }
 
