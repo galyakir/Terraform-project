@@ -25,7 +25,7 @@ module "lb" {
   vpc = module.network.app_vpc.id
 }
 
-#this module create auto scaling group with 1 to 3 instances
+//#this module create auto scaling group with 1 to 3 instances
 module "auto_scaling" {
   source = ".//modules/auto_scaling"
   dns_name = module.lb.app_lb.dns_name

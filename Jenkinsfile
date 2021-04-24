@@ -1,38 +1,37 @@
-pipeline{
+pipeline {
 
-agent {node 'aws'}
-
+ agent {label 'aws'}
 stages{
-    stage('checkout') {
-        steps{
-            script{
-                  cleanWs()
-                  checkout scm
-            }
+
+// this stage clean the environment
+ stage ('checkout'){
+   steps{
+		cleanWs()
+		checkout scm
         }
-    }
-    stage('download from S3 ') {
-     steps{
-      script{
-       withAWS(region:'us-east-1',credentials:'awsCredentials')\{
-          s3Download bucket: 'web-app-bucket-gal', file: 'terraform.tfvars.json', path: 'terraform.tfvars.json'
-           }
-         }
        }
-     }
-    stage('init') {
-            steps{
-                script{
-                      sh 'terraform init'
-                }
-            }
+
+// this stage download variables file for terraform from S3
+ stage ('S3download'){
+   steps{
+                  withAWS(region:'us-east-1',credentials:'awsCredentials')\
+                                    {
+                                        s3Download bucket: 'web-app-bucket-gal', file: 'terraform.tfvars.json', path: 'terraform.tfvars.json'
+                                    }
         }
-    stage('apply') {
-      steps{
-       script{
-         sh 'terraform apply -auto-approve'
-         }
        }
-     }
-    }
-  }
+// this stage init terraform
+ stage ('init'){
+   steps{
+				  sh 'terraform init'
+        }
+       }
+
+// this stage apply terraform
+  stage ('apply'){
+   steps{
+				   sh 'terraform apply -auto-approve'
+        }
+       }
+ }
+}
