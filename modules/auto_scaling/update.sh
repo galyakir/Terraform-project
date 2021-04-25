@@ -50,6 +50,7 @@ PGPORT=5432" >.env
 
 
 #deploy the app
+npm run initdb
 sudo pm2 start npm -- run dev
 sudo pm2 save
 sudo pm2 startup
