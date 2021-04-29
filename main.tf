@@ -26,22 +26,33 @@ module "lb" {
 }
 
 //#this module create auto scaling group with 1 to 3 instances
-module "auto_scaling" {
-  source = ".//modules/auto_scaling"
-  dns_name = module.lb.app_lb.dns_name
-  db_host = aws_db_instance.app_DB.address
-  tag_name = var.tag_name
-  ec2_password = var.ec2_password
+//module "auto_scaling" {
+//  source = ".//modules/auto_scaling"
+//  dns_name = module.lb.app_lb.dns_name
+//  db_host = aws_db_instance.app_DB.address
+//  tag_name = var.tag_name
+//  ec2_password = var.ec2_password
+//  ami = var.ami
+//  keyname = var.keyname
+//  okta_id = var.okta_id
+//  okta_secret = var.okta_secret
+//  okta_url = var.okta_url
+//  okta_key = var.okta_key
+//  subnets = [module.network.subnet1.id, module.network.subnet2.id, module.network.subnet3.id]
+//  ec2_type = var.ec2_type
+//  Web_app_sg_id =  module.groups.app_sg.id
+//  target_group = module.lb.lb_tg.arn
+//}
+
+
+module "instances"{
+  source = ".//modules/instances"
+  Web_app_sg_id = module.groups.app_sg.id
   ami = var.ami
-  keyname = var.keyname
-  okta_id = var.okta_id
-  okta_secret = var.okta_secret
-  okta_url = var.okta_url
-  okta_key = var.okta_key
-  subnets = [module.network.subnet1.id, module.network.subnet2.id, module.network.subnet3.id]
   ec2_type = var.ec2_type
-  Web_app_sg_id =  module.groups.app_sg.id
-  target_group = module.lb.lb_tg.arn
+  keyname = var.keyname
+  subnets = [module.network.subnet1.id, module.network.subnet2.id, module.network.subnet3.id]
+  tag_name = var.tag_name
 }
 
 
