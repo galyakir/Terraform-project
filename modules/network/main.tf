@@ -71,7 +71,7 @@ resource "aws_subnet" "app_subnet3" {
 
 
 resource "aws_db_subnet_group" "db_subnet_group" {
-  name = "db_subnet_group"
+  name = var.db_name
   subnet_ids = [
     aws_subnet.app_subnet1.id,
     aws_subnet.app_subnet2.id,

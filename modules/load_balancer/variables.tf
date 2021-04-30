@@ -8,6 +8,11 @@ variable "lb_sg_id" {
   type = string
 }
 
+variable "lb_name" {
+  description = "load balancer name"
+  type = string
+}
+
 variable "tag_name" {
   description = "Tag name"
   type = string
@@ -17,3 +22,10 @@ variable "vpc" {
   description = "Vpc id"
   type = string
 }
+
+variable "instances_ids" {
+  description = "instances_ids"
+  type = list(string)
+}
+
+
