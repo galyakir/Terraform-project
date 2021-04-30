@@ -21,10 +21,19 @@ pipeline {
         }
 
         // this stage init terraform
-        stage ('staging - terraform init & apply') {
+        stage ('staging - terraform init') {
             steps {
                 dir("staging") {
-                    sh 'terraform init & terraform apply --auto-approve'
+                    sh 'terraform init'
+                }
+            }
+        }
+
+        // this stage init terraform
+        stage ('staging - terraform apply') {
+            steps {
+                dir("staging") {
+                    sh 'terraform apply --auto-approve'
                 }
             }
         }
@@ -46,10 +55,19 @@ pipeline {
         }
 
         // this stage init terraform
-        stage ('prod - terraform init & apply') {
+        stage ('prod - terraform init') {
             steps {
                 dir("prod") {
-                    sh 'terraform init & terraform apply --auto-approve'
+                    sh 'terraform init'
+                }
+            }
+        }
+
+        // this stage init terraform
+        stage ('prod - terraform apply') {
+            steps {
+                dir("prod") {
+                    sh 'terraform apply --auto-approve'
                 }
             }
         }
