@@ -1,6 +1,6 @@
 pipeline {
 
-    agent {label 'aws'}
+    agent any
     stages {
 
         // this stage clean the environment
