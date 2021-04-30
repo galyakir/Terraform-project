@@ -1,6 +1,6 @@
 pipeline {
 
-    agent any
+    agent {label 'aws'}
     stages {
 
         // this stage clean the environment
@@ -30,7 +30,14 @@ pipeline {
         // this stage destroy auto_scaling module so the user_date will update
         stage ('destroy') {
             steps {
-                sh 'terraform destroy -auto-approve'
+                sh 'terraform destroy -target module.auto_scaling -auto-approve'
+            }
+        }
+
+        // this stage apply terraform
+        stage ('apply') {
+            steps {
+                sh 'terraform apply -auto-approve'
             }
         }
     }
