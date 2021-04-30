@@ -7,7 +7,7 @@ terraform {
 }
 
 resource "aws_lb" "web_app_balancer" {
-  name = "web-app-balancer"
+  name = var.lb_name
   load_balancer_type = "application"
   subnets = var.subnets
   security_groups = [
@@ -34,4 +34,22 @@ resource "aws_lb_target_group" "web_app_lb_target_group" {
   tags = {
     Name = var.tag_name
   }
+}
+
+resource "aws_lb_target_group_attachment" "first_instance" {
+  target_group_arn = aws_lb_target_group.web_app_lb_target_group.arn
+  target_id        = var.instances_ids[0]
+  port             = 8080
+}
+
+resource "aws_lb_target_group_attachment" "second_instance" {
+  target_group_arn = aws_lb_target_group.web_app_lb_target_group.arn
+  target_id        = var.instances_ids[1]
+  port             = 8080
+}
+
+resource "aws_lb_target_group_attachment" "third_instance" {
+  target_group_arn = aws_lb_target_group.web_app_lb_target_group.arn
+  target_id        = var.instances_ids[2]
+  port             = 8080
 }

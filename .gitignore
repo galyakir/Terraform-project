@@ -1,4 +1,5 @@
 /.idea/
 /.terraform/
-terraform.tfvars.json
+old/terraform.tfvars.json
 .terraform.lock.hcl
+/old/
