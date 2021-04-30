@@ -3,7 +3,7 @@ output "staging_url" {
 }
 
 resource "local_file" "prod_output" {
-  content = templatefile("prod.yml",
+  content = templatefile("staging.yml",
   {
     host_url = module.lb.app_lb.dns_name
     okta_url= var.okta_url
@@ -15,7 +15,7 @@ resource "local_file" "prod_output" {
     jenkins_password = var.jenkins_password
   }
   )
-  filename = "prod.yml"
+  filename = "staging.yml"
 }
 
 
