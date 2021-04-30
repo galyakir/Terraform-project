@@ -44,6 +44,16 @@ variable "keyname" {
   type = string
 }
 
+variable "jenkins_user_name" {
+  description = "jenkins user name"
+  type = string
+}
+
+variable "jenkins_password" {
+  description = "jenkins password"
+  type = string
+}
+
 variable "okta_id" {
   description = "okta id"
   type = string
