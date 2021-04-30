@@ -18,6 +18,16 @@ variable "lb_name" {
   type = string
 }
 
+variable "jenkins_user_name" {
+  description = "jenkins user name"
+  type = string
+}
+
+variable "jenkins_password" {
+  description = "jenkins password"
+  type = string
+}
+
 variable "region" {
   description = "EC2 region"
   type = string
