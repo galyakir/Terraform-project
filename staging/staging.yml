@@ -93,10 +93,3 @@
           Authorization: 'SSWS ${okta_key}'
       register: result
       ignore_errors: yes
-
-
-
-
-
-
-
