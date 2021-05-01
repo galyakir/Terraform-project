@@ -71,8 +71,8 @@
         url: 'https://${okta_url}/api/v1/apps/${okta_id}'
         method: PUT
         body:
-          {"name":"oidc_client",
-           "label":"My Web App",
+          {"name": "oidc_client",
+           "label": "staging_app",
            "credentials":
              {"oauthClient":
                 {"autoKeyRotation":true,
