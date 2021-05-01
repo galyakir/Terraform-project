@@ -42,7 +42,7 @@ pipeline {
         stage ('staging - deploy') {
             steps {
                 dir("staging") {
-                    sh 'sleep 20 & ansible-playbook staging.yml'
+                    sh 'ansible-playbook staging.yml'
                 }
             }
         }
@@ -76,7 +76,7 @@ pipeline {
         stage ('prod - deploy') {
             steps {
                 dir("prod") {
-                    sh 'sleep 20 & ansible-playbook prod.yml'
+                    sh 'ansible-playbook prod.yml'
                 }
             }
         }
