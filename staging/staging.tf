@@ -1,5 +1,3 @@
-
-
 #this module create vpc with 3 subnets that have internet getway.
 module "network" {
   source = "..//modules/network"
@@ -28,26 +26,7 @@ module "lb" {
   lb_name = var.lb_name
 }
 
-//#this module create auto scaling group with 1 to 3 instances
-//module "auto_scaling" {
-//  source = "..//modules/auto_scaling"
-//  dns_name = module.lb.app_lb.dns_name
-//  db_host = aws_db_instance.app_DB.address
-//  tag_name = var.tag_name
-//  ec2_password = var.ec2_password
-//  ami = var.ami
-//  keyname = var.keyname
-//  okta_id = var.okta_id
-//  okta_secret = var.okta_secret
-//  okta_url = var.okta_url
-//  okta_key = var.okta_key
-//  subnets = [module.network.subnet1.id, module.network.subnet2.id, module.network.subnet3.id]
-//  ec2_type = var.ec2_type
-//  Web_app_sg_id =  module.groups.app_sg.id
-//  target_group = module.lb.lb_tg.arn
-//}
-
-
+#this module create 3 EC2 instances
 module "instances"{
   source = "..//modules/instances"
   Web_app_sg_id = module.groups.app_sg.id
@@ -57,7 +36,6 @@ module "instances"{
   subnets = [module.network.subnet1.id, module.network.subnet2.id, module.network.subnet3.id]
   tag_name = var.tag_name
 }
-
 
 #create postgres RDS
 resource "aws_db_instance" "app_DB" {
