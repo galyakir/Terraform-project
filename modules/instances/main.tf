@@ -11,6 +11,11 @@ resource "aws_instance" "first_instance" {
   subnet_id = var.subnets[0]
   security_groups = [var.Web_app_sg_id]
   key_name = var.keyname
+  lifecycle {
+    ignore_changes = [
+      disable_api_termination,ebs_optimized,hibernation,security_groups,
+      credit_specification,network_interface,ephemeral_block_device]
+  }
 
 tags = {
     Name = var.tag_name
@@ -25,6 +30,13 @@ resource "aws_instance" "second_instance" {
   security_groups = [var.Web_app_sg_id]
   key_name = var.keyname
 
+  lifecycle {
+    ignore_changes = [
+      disable_api_termination,ebs_optimized,hibernation,security_groups,
+      credit_specification,network_interface,ephemeral_block_device]
+  }
+
+
   tags = {
     Name = var.tag_name
   }
@@ -37,6 +49,12 @@ resource "aws_instance" "third_instance" {
   subnet_id = var.subnets[2]
   security_groups = [var.Web_app_sg_id]
   key_name = var.keyname
+
+  lifecycle {
+    ignore_changes = [
+      disable_api_termination,ebs_optimized,hibernation,security_groups,
+      credit_specification,network_interface,ephemeral_block_device]
+  }
 
   tags = {
     Name = var.tag_name
