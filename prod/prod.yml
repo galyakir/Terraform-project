@@ -1,0 +1,102 @@
+---
+- hosts: prod
+  become: yes
+  tasks:
+
+    - name: install unzip
+      apt:
+        name: unzip
+        state: latest
+
+    - name: update nodejs package
+      ansible.builtin.shell: curl -fsSL https://deb.nodesource.com/setup_15.x | sudo -E bash -
+
+    - name: install nodejs
+      apt:
+        name: nodejs
+        state: present
+
+    - name: install pm2
+      shell: npm install pm2 -g
+
+    - name: Download artifact
+      get_url:
+        url: http://52.200.46.164:8080/job/CI_pipeline/lastSuccessfulBuild/artifact/node-weight-tracker.zip
+        dest: .
+        force_basic_auth: yes
+        username: ${jenkins_user_name}
+        password: ${jenkins_password}
+
+    - name: unzip artifact
+      shell: unzip -o node-weight-tracker.zip -d node-weight-tracker
+
+    - name: install node dependecies
+      shell: npm install
+      args:
+        chdir: node-weight-tracker/
+
+    - name: create .env file
+      copy:
+        dest: "node-weight-tracker/.env"
+        content: |
+          PORT=8080
+          HOST=0.0.0.0
+          NODE_ENV=development
+          HOST_URL=http://${host_url}:8080
+          COOKIE_ENCRYPT_PWD=superAwesomePasswordStringThatIsAtLeast32CharactersLong!
+          OKTA_ORG_URL=https://${okta_url}
+          OKTA_CLIENT_ID=${okta_id}
+          OKTA_CLIENT_SECRET=${okta_secret}
+          PGHOST=${db_host}
+          PGUSERNAME=postgres
+          PGDATABASE=postgres
+          PGPASSWORD=postgres
+          PGPORT=5432
+    - name: initialize db
+      shell: npm run initdb
+      args:
+        chdir: node-weight-tracker/
+
+    - name: clear process
+      shell: pm2 delete all
+      ignore_errors: yes
+
+    - name: run application
+      shell: pm2 start npm -- run dev && pm2 save && pm2 startup
+      args:
+        chdir: node-weight-tracker/
+
+    - name: update OKTA application
+      uri:
+        url: 'https://${okta_url}/api/v1/apps/${okta_id}'
+        method: PUT
+        body:
+          {"name":"oidc_client",
+           "label":"My Web App",
+           "credentials":
+             {"oauthClient":
+                {"autoKeyRotation":true,
+                 "client_id":"${okta_id}",
+                 "token_endpoint_auth_method":"client_secret_basic"}},
+           "settings":
+             {"oauthClient":
+                {"redirect_uris":["http://${host_url}:8080/authorization-code/callback"],
+                 "post_logout_redirect_uris":["http://${host_url}:8080/logout"],
+                 "response_types":["code"],
+                 "application_type":"web",
+                 "consent_method":"TRUSTED",
+                 "issuer_mode":"ORG_URL"}}}
+        body_format: json
+        headers:
+          Accept: 'application/json'
+          Content-Type: 'application/json'
+          Authorization: 'SSWS ${okta_key}'
+      register: result
+      ignore_errors: yes
+
+
+
+
+
+
+
