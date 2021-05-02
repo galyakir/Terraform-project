@@ -17,7 +17,7 @@ resource "local_file" "prod_output" {
     jenkins_password = var.jenkins_password
   }
   )
-  filename = "deploy.yml"
+  filename = "../deploy.yml"
 }
 
 resource "local_file" "AnsibleInventory" {
@@ -29,7 +29,7 @@ resource "local_file" "AnsibleInventory" {
     third_instance = module.instances.third_instance.public_ip
   }
   )
-  filename = "inventory"
+  filename = "../inventory"
 }
 
 
