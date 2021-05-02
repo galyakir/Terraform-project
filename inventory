@@ -1,0 +1,4 @@
+[${hosts_name}]
+${first_instance}
+${second_instance}
+${third_instance}

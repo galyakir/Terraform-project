@@ -21,11 +21,12 @@ resource "local_file" "prod_output" {
 }
 
 resource "local_file" "AnsibleInventory" {
-  content = templatefile("inventory",
+  content = templatefile("../inventory",
   {
-    staging_first_instance = module.instances.first_instance.public_ip,
-    staging_second_instance = module.instances.second_instance.public_ip,
-    staging_third_instance = module.instances.third_instance.public_ip
+    hosts_name = var.tag_name
+    first_instance = module.instances.first_instance.public_ip,
+    second_instance = module.instances.second_instance.public_ip,
+    third_instance = module.instances.third_instance.public_ip
   }
   )
   filename = "inventory"
