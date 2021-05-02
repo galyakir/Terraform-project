@@ -42,9 +42,7 @@ pipeline {
         // deploy application to staging
         stage ('staging - deploy') {
             steps {
-                dir("staging") {
-                    sh 'ansible-playbook staging.yml'
-                }
+                    sh 'ansible-playbook deploy.yml'
             }
         }
 
@@ -76,9 +74,7 @@ pipeline {
         // deploy application to staging
         stage ('prod - deploy') {
             steps {
-                dir("prod") {
-                    sh 'ansible-playbook prod.yml'
-                }
+                    sh 'ansible-playbook deploy.yml'
             }
         }
     }

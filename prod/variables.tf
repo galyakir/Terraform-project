@@ -23,7 +23,6 @@ variable "region" {
   type = string
 }
 
-
 variable "db_name" {
   description = "Data Base Name"
   type = string
@@ -69,11 +68,17 @@ variable "okta_url" {
   type = string
 }
 
-
 variable "okta_key" {
   description = "okta key"
   type = string
 }
+
+variable "okta_label" {
+  description = "okta app label"
+  type = string
+}
+
+
 
 variable "vpc_cidr" {
   description = "VPC CIDR"
