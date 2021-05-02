@@ -93,5 +93,4 @@
           Content-Type: 'application/json'
           Authorization: 'SSWS ${okta_key}'
       register: result
-      ignore_errors: yes
       run_once: true
