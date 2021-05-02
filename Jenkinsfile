@@ -55,7 +55,7 @@ pipeline {
            }
         }
 
-        // this stage init terraform
+        // this stage init terraform at prod
         stage ('prod - terraform init') {
             steps {
                 dir("prod") {
@@ -64,7 +64,7 @@ pipeline {
             }
         }
 
-        // this stage init terraform
+        // this stage apply terraform
         stage ('prod - terraform apply') {
             steps {
                 sh 'cp -f inventorybase inventory'
@@ -75,7 +75,7 @@ pipeline {
             }
         }
 
-        // deploy application to staging
+        // deploy application to prod
         stage ('prod - deploy') {
             steps {
                     sh 'ansible-playbook deploy.yml'
