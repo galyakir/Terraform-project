@@ -3,7 +3,7 @@ output "prod_url" {
 }
 
 resource "local_file" "prod_output" {
-  content = templatefile("../deploy.yml",
+  content = templatefile("prod.yml",
   {
     hosts_name = var.tag_name
     host_url = module.lb.app_lb.dns_name
@@ -17,20 +17,20 @@ resource "local_file" "prod_output" {
     jenkins_password = var.jenkins_password
   }
   )
-  filename = "../deploy.yml"
+  filename = "prod.yml"
 }
 
 
 
 
 resource "local_file" "AnsibleInventory" {
-  content = <<-EOT
-    [prod]
-    ${module.instances.first_instance.public_ip}
-    ${module.instances.second_instance.public_ip}
-    ${module.instances.third_instance.public_ip}
-    EOT
-filename = "../inventory"
+  content = templatefile("inventory",
+  {
+    first_instance = module.instances.first_instance.public_ip
+    second_instance = module.instances.second_instance.public_ip
+    third_instance = module.instances.third_instance.public_ip
+  }
+  )
+  filename = "inventory"
 }
-
 

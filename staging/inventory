@@ -1,4 +1,4 @@
-[prod]
+[staging]
 ${first_instance}
 ${second_instance}
 ${third_instance}
