@@ -52,11 +52,11 @@
           PGDATABASE=postgres
           PGPASSWORD=postgres
           PGPORT=5432
+
     - name: initialize db
       shell: npm run initdb
       args:
         chdir: node-weight-tracker/
-      run_once: true
 
     - name: clear process
       shell: pm2 delete all
