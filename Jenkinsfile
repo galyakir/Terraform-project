@@ -33,6 +33,8 @@ pipeline {
         // this stage init terraform
         stage ('staging - terraform apply') {
             steps {
+                sh 'cp -f inventorybase inventory'
+                sh 'cp -f deploybase.yml deploy.yml'
                 dir("staging") {
                     sh 'terraform apply --auto-approve'
                 }
@@ -67,6 +69,8 @@ pipeline {
         // this stage init terraform
         stage ('prod - terraform apply') {
             steps {
+                sh 'cp -f inventorybase inventory'
+                sh 'cp -f deploybase.yml deploy.yml'
                 dir("prod") {
                     sh 'terraform apply --auto-approve'
                 }
@@ -76,9 +80,7 @@ pipeline {
         // deploy application to staging
         stage ('prod - deploy') {
             steps {
-                dir("prod") {
                     sh 'ansible-playbook prod.yml'
-                }
             }
         }
     }
