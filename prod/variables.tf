@@ -75,6 +75,13 @@ variable "okta_key" {
   type = string
 }
 
+variable "okta_label" {
+  description = "okta app label"
+  type = string
+}
+
+
+
 variable "vpc_cidr" {
   description = "VPC CIDR"
   type = string
