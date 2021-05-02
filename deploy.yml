@@ -72,7 +72,7 @@
         method: PUT
         body:
           {"name":"oidc_client",
-           "label":${okta_label},
+           "label": "${okta_label}",
            "credentials":
              {"oauthClient":
                 {"autoKeyRotation":true,
