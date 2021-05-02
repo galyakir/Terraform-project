@@ -17,7 +17,7 @@ resource "local_file" "prod_output" {
     jenkins_password = var.jenkins_password
   }
   )
-  filename = "prod.yml"
+  filename = "deploy.yml"
 }
 
 
