@@ -1,4 +1,4 @@
 [staging]
-${first_instance}
-${second_instance}
-${third_instance}
+${staging_first_instance}
+${staging_second_instance}
+${staging_third_instance}

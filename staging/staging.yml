@@ -1,5 +1,5 @@
 ---
-- hosts: ${hosts_name}
+- hosts: staging
   become: yes
   tasks:
 
@@ -52,6 +52,7 @@
           PGDATABASE=postgres
           PGPASSWORD=postgres
           PGPORT=5432
+
     - name: initialize db
       shell: npm run initdb
       args:
@@ -71,8 +72,8 @@
         url: 'https://${okta_url}/api/v1/apps/${okta_id}'
         method: PUT
         body:
-          {"name":"oidc_client",
-           "label": "${okta_label}",
+          {"name": "oidc_client",
+           "label": "staging_app",
            "credentials":
              {"oauthClient":
                 {"autoKeyRotation":true,
