@@ -1,12 +1,8 @@
 pipeline {
 
     agent {label 'aws'}
-    environment {
-            env = 'true'
-            DB_ENGINE    = 'sqlite'
-        }
-    stages {
 
+    stages {
         // this stage clean the environment
         stage ('checkout') {
             steps{
@@ -19,13 +15,13 @@ pipeline {
         stage ('S3 download tfvars') {
             steps {
                 withAWS(region:'us-east-1',credentials:'awsCredentials') {
-                    s3Download bucket: 'web-app-bucket-gal', file: '{env}/terraform.tfvars.json', path: '{env}/terraform.tfvars.json'
+                    s3Download bucket: 'web-app-bucket-gal', file: '${env.JOB_NAME}/terraform.tfvars.json', path: '${env.JOB_NAME}/terraform.tfvars.json'
                 }
             }
         }
 
         // this stage init terraform
-        stage ('{env} - terraform init') {
+        stage ('${env.JOB_NAME} - terraform init') {
             steps {
                 dir("staging") {
                     sh 'terraform init'
@@ -34,7 +30,7 @@ pipeline {
         }
 
         // this stage init terraform
-        stage ('{env} - terraform apply') {
+        stage ('${env.JOB_NAME} - terraform apply') {
             steps {
                 sh 'cp -f inventorybase inventory'
                 sh 'cp -f deploybase.yml deploy.yml'
@@ -44,10 +40,11 @@ pipeline {
             }
         }
 
-        stage ('{env} - update ansible vars to S3') {
+        stage ('${env.JOB_NAME} - update ansible vars to S3') {
           steps {
             withAWS(region:'us-east-1',credentials:'awsCredentials') {
-              s3Upload bucket: "web-app-bucket-gal/staging/", workingDir:'', includePathPattern:'inventory deploy.yml'
+              s3Upload bucket: "web-app-bucket-gal/${env.JOB_NAME}", workingDir:'', includePathPattern:'inventory'
+              s3Upload bucket: "web-app-bucket-gal/${env.JOB_NAME}", workingDir:'', includePathPattern:'deploy.yml'
               }
              }
           }
