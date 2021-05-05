@@ -15,32 +15,32 @@ pipeline {
         stage ('S3 download tfvars') {
             steps {
                 withAWS(region:'us-east-1',credentials:'awsCredentials') {
-                    s3Download bucket: 'web-app-bucket-gal', file: '${env.JOB_NAME}/terraform.tfvars.json', path: '${env.JOB_NAME}/terraform.tfvars.json'
+                    s3Download bucket: 'web-app-bucket-gal', file: "${env.JOB_NAME}/terraform.tfvars.json", path: "${env.JOB_NAME}/terraform.tfvars.json"
                 }
             }
         }
 
         // this stage init terraform
-        stage ('${env.JOB_NAME} - terraform init') {
+        stage ('terraform init') {
             steps {
-                dir("staging") {
+                dir("${env.JOB_NAME}") {
                     sh 'terraform init'
                 }
             }
         }
 
         // this stage init terraform
-        stage ('${env.JOB_NAME} - terraform apply') {
+        stage ('terraform apply') {
             steps {
                 sh 'cp -f inventorybase inventory'
                 sh 'cp -f deploybase.yml deploy.yml'
-                dir("staging") {
+                dir("${env.JOB_NAME}") {
                     sh 'terraform apply --auto-approve'
                 }
             }
         }
 
-        stage ('${env.JOB_NAME} - update ansible vars to S3') {
+        stage ('s3Upload ansible vars') {
           steps {
             withAWS(region:'us-east-1',credentials:'awsCredentials') {
               s3Upload bucket: "web-app-bucket-gal/${env.JOB_NAME}", workingDir:'', includePathPattern:'inventory'
@@ -48,5 +48,21 @@ pipeline {
               }
              }
           }
+
+        // Deploy approval
+        stage('destroy approval'){
+           steps{
+                input "destroy?"
+           }
+        }
+
+         // this stage destroy terraform
+        stage ('terraform destroy') {
+            steps {
+                dir("${env.JOB_NAME}") {
+                    sh 'terraform destroy --auto-approve'
+                }
+            }
+        }
     }
 }
