@@ -41,12 +41,22 @@ pipeline {
             }
         }
 
+        stage ('staging - update vars to S3') {
+                    steps {
+                       withAWS(region:'us-east-1',credentials:'awsCredentials') {
+                         s3Upload bucket: "web-app-bucket-gal/staging/", workingDir:'', includePathPattern:'inventory deploy.yml'
+                       }
+                    }
+                }
+
+
+
         // deploy application to staging
-        stage ('staging - deploy') {
-            steps {
-                    sh 'ansible-playbook deploy.yml'
-            }
-        }
+        //stage ('staging - deploy') {
+         //   steps {
+         //           sh 'ansible-playbook deploy.yml'
+         //   }
+       // }
 
         // Deploy approval
         stage('Deploy approval'){
@@ -75,11 +85,19 @@ pipeline {
             }
         }
 
-        // deploy application to prod
-        stage ('prod - deploy') {
-            steps {
-                    sh 'ansible-playbook deploy.yml'
-            }
-        }
+         stage ('prod - update vars to S3') {
+           steps {
+             withAWS(region:'us-east-1',credentials:'awsCredentials') {
+               s3Upload bucket: "web-app-bucket-gal/prod/", workingDir:'', includePathPattern:'inventory deploy.yml'
+                }
+             }
+           }
+
+       // deploy application to prod
+        // stage ('prod - deploy') {
+      //      steps {
+        //            sh 'ansible-playbook deploy.yml'
+      //      }
+      //  }
     }
 }
