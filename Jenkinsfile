@@ -48,21 +48,5 @@ pipeline {
               }
              }
           }
-
-        // Deploy approval
-        stage('destroy approval'){
-           steps{
-                input "destroy?"
-           }
-        }
-
-         // this stage destroy terraform
-        stage ('terraform destroy') {
-            steps {
-                dir("${env.JOB_NAME}") {
-                    sh 'terraform destroy --auto-approve'
-                }
-            }
-        }
     }
 }
