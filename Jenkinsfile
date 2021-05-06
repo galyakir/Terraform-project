@@ -1,6 +1,6 @@
 pipeline {
 
-    agent {label 'aws'}
+    agent {label 'terraform'}
 
     stages {
         // this stage clean the environment
