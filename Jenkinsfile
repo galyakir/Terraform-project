@@ -32,8 +32,6 @@ pipeline {
         // this stage init terraform
         stage ('terraform apply') {
             steps {
-                sh 'cp -f inventorybase inventory'
-                sh 'cp -f deploybase.yml deploy.yml'
                 dir("${env.JOB_NAME}") {
                     sh 'terraform apply --auto-approve'
                 }
