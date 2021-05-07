@@ -3,8 +3,7 @@ output "staging_url" {
 }
 
 resource "local_file" "prod_output" {
-  content = templatefile("../deploy.yml",
-  {
+  content = <<-EOT
     hosts_name = var.tag_name
     host_url = module.lb.app_lb.dns_name
     okta_url= var.okta_url
@@ -15,9 +14,8 @@ resource "local_file" "prod_output" {
     db_host = aws_db_instance.app_DB.address
     jenkins_user_name = var.jenkins_user_name
     jenkins_password = var.jenkins_password
-  }
-  )
-  filename = "../deploy.yml"
+   EOT
+  filename = "../var.yml"
 }
 
 
