@@ -15,7 +15,7 @@ resource "local_file" "prod_output" {
     jenkins_user_name = var.jenkins_user_name
     jenkins_password = var.jenkins_password
    EOT
-  filename = "../var.yml"
+  filename = "../vars.yml"
 }
 
 
