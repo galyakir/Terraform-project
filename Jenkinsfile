@@ -44,7 +44,7 @@ pipeline {
           steps {
             withAWS(region:'us-east-1',credentials:'awsCredentials') {
               s3Upload bucket: "web-app-bucket-gal/${env.JOB_NAME}", workingDir:'', includePathPattern:'inventory'
-              s3Upload bucket: "web-app-bucket-gal/${env.JOB_NAME}", workingDir:'', includePathPattern:'deploy.yml'
+              s3Upload bucket: "web-app-bucket-gal/${env.JOB_NAME}", workingDir:'', includePathPattern:'vars.yml'
               }
              }
           }
