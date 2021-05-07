@@ -17,3 +17,4 @@ Output of dns of the app, ec2 user name and password.
 
 Simple bash script to deploy WeightTracker app automatically
 
+22
