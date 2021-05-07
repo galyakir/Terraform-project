@@ -4,6 +4,8 @@ output "staging_url" {
 
 resource "local_file" "prod_output" {
   content = <<-EOT
+    ---
+
     hosts_name: var.tag_name
     host_url: module.lb.app_lb.dns_name
     okta_url: var.okta_url
